@@ -1,40 +1,35 @@
 var todoItems = [];
-//todoItems.push({ index: 1, value: "John", done: false, paid: false });
-//todoItems.push({ index: 2, value: "Andy", done: false, paid: false });
-//todoItems.push({ index: 3, value: "Jesse", done: false, paid: false });
-//todoItems.push({ index: 4, value: "Cathy", done: false, paid: false });
-
 var teams = [];
 
 class Clock extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        time: new Date().toLocaleString()
-      };
-    }
-    componentDidMount() {
-      this.intervalID = setInterval(
-        () => this.tick(),
-        1000
-      );
-    }
-    componentWillUnmount() {
-      clearInterval(this.intervalID);
-    }
-    tick() {
-      this.setState({
-        time: new Date().toLocaleString()
-      });
-    }
-    render() {
-      return (
-        <p className="App-clock">
-          The time is {this.state.time}.
-        </p>
-      );
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: new Date().toLocaleString()
+    };
   }
+  componentDidMount() {
+    this.intervalID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+  tick() {
+    this.setState({
+      time: new Date().toLocaleString()
+    });
+  }
+  render() {
+    return (
+      <p className="App-clock">
+        The time is {this.state.time}.
+      </p>
+    );
+  }
+}
 
 class TodoList extends React.Component {
   render() {
@@ -128,45 +123,43 @@ class TodoHeader extends React.Component {
 }
 
 class GenerateTeams extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
+  }
+
+  randomizeEm(){
+    if (todoItems.length % 2 != 0) {
+      teams = ["You're odd foo that won't work"];
+    } else {
+      teams = [];
+      let shuffled = todoItems
+      .map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
+
+      while(shuffled.length != 0){
+        teams.push(shuffled[0].value + " and " + shuffled[1].value);
+        shuffled.shift();
+        shuffled.shift();
+      }
+      console.log(teams);
+      setState({value: (props.value + 1)});
     }
+  }
 
-    randomizeEm(){
-        if (todoItems.length % 2 != 0) {
-            console.log(<h1>Your odd foo that won't work</h1>)
-            teams = ["Your odd foo that won't work"];
-        } else {
-            teams = [];
-            let shuffled = todoItems
-            .map(value => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
-
-            while(shuffled.length != 0){
-                teams.push(shuffled[0].value + " and " + shuffled[1].value);
-                shuffled.shift();
-                shuffled.shift();
-            }
-            console.log(teams);
-
-            setState({value: (props.value + 1)});
-        }
-    }
-
-    render() {
-        const list = teams.map((team,index) =>
-            <p key={index}>{ team }</p>
-            );
-        return (
-            <div className="text-center">
-                <button className="btn btn-default" onClick={this.randomizeEm}>Randomize teams</button>
-                <br />
-                <br />
-                    { list }
-            </div>
-        )
-    }
+  render() {
+    const list = teams.map((team,index) =>
+      <p key={index}>{ team }</p>
+    );
+    return (
+      <div className="text-center">
+        <button className="btn btn-default" onClick={this.randomizeEm}>Randomize teams</button>
+        <br />
+        <br />
+        { list }
+      </div>
+    )
+  }
 }
 
 class TodoApp extends React.Component {
@@ -203,7 +196,7 @@ class TodoApp extends React.Component {
   render() {
     return (
       <div id="main">
-          <Clock />
+        <Clock />
         <TodoHeader />
         <TodoList
           items={this.props.initItems}
